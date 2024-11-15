@@ -1,4 +1,6 @@
 using Infrastructure;
+using Microsoft.Extensions.Configuration;
+using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRepositories();
-builder.Services.AddDatabase(builder.Configuration);
-builder.Services.AddValidation();
+builder.Services.AddInfrastructure(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+//app.UseMiddleware<ExceptionHandleMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

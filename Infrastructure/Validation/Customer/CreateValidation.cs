@@ -1,15 +1,12 @@
-﻿using Core.DTOs;
+﻿using Core.DTOs.Customer;
 using FluentValidation;
 
-namespace WebApi.Validation
+namespace Infrastructure.Validation.Customer
 {
-    public class UpdateValidation : AbstractValidator<UpdateCustomerDTO>
+    public class CreateValidation : AbstractValidator<CreateCustomerDTO>
     {
-        public UpdateValidation()
+        public CreateValidation()
         {
-
-            RuleFor(u => u.Id).NotEmpty();
-
             RuleFor(c => c.FirstName).Length(3, 40);
 
             RuleFor(c => c.LastName).Length(3, 40);
@@ -19,6 +16,8 @@ namespace WebApi.Validation
             RuleFor(c => c.Phone).Length(12, 15);
 
             RuleFor(c => c.BirthDate).NotEmpty();
+
+
 
 
         }

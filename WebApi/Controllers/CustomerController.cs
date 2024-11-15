@@ -1,13 +1,10 @@
-﻿using Core.DTOs;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces.Repositories;
-<<<<<<< HEAD
-using Core.Request;
-=======
+
 using Core.Requests;
->>>>>>> bd96a8821552a737241f1e57ac48f1778b78ef8e
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
+using Core.DTOs.Customer;
 
 namespace WebApi.Controllers;
 
@@ -27,11 +24,7 @@ public class CustomerController : BaseApiController
 
 
     [HttpGet("list")]
-<<<<<<< HEAD
     public async Task<IActionResult> List([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
-=======
-    public async Task<IActionResult> List([FromQuery] PaginationRequest request)
->>>>>>> bd96a8821552a737241f1e57ac48f1778b78ef8e
     {
         return Ok(await _customerRepository.List(request, cancellationToken));
     }

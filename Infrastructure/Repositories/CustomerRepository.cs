@@ -1,8 +1,9 @@
-﻿using Core.DTOs;
+﻿using Core.DTOs.Customer;
 using Core.Entities;
 using Core.Interfaces.Repositories;
-using Core.Request;
+using Core.Requests;
 using Infrastructure.Contexts;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -30,9 +31,9 @@ public class CustomerRepository : ICustomerRepository
         _context.Customers.Add(entity); //aqui no impactamos aun la BD
         await _context.SaveChangesAsync(); //esto impacta en la BD
 
-       
 
-        return AddTo(entity);
+
+        return entity.Adapt<CustomerDTO>();
     }
 
     public async Task<CustomerDTO> Delete(int id)
@@ -42,21 +43,24 @@ public class CustomerRepository : ICustomerRepository
         _context.Customers.Remove(entity);
         await _context.SaveChangesAsync();
 
-        
 
-        return AddTo(entity);
+
+        return entity.Adapt<CustomerDTO>();
     }
 
     public async Task<CustomerDTO> Get(int id)
     {
-        var entity = await VerifyExists(id);
+        var entity = await _context.Customers
+            .Include(x => x.Accounts)
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (entity == null) throw new Exception("No se encontro con el id solicitado");
 
-        return AddTo(entity);
+        return entity.Adapt<CustomerDTO>();
     }
 
     public async Task<List<CustomerDTO>> List(PaginationRequest request, CancellationToken cancellationToken)
     {
-        var dtos = await _context.Customers
+        var entities = await _context.Customers
             .Skip((request.Page.Value - 1) * request.PageSize.Value)
             .Take(request.PageSize.Value).Select(customer => new CustomerDTO
             {
@@ -67,37 +71,23 @@ public class CustomerRepository : ICustomerRepository
                 BirthDate = customer.BirthDate,
             }).ToListAsync(cancellationToken);
 
-<<<<<<< HEAD
-=======
-        var dtos = entities.Select(customer => new CustomerDTO
-        {
-            Id = customer.Id,
-            FullName = $"{customer.FirstName} {customer.LastName}",
-            Phone = customer.Phone,
-            Email = customer.Email,
-            BirthDate = customer.BirthDate.ToShortDateString(),
-        });
->>>>>>> bd96a8821552a737241f1e57ac48f1778b78ef8e
 
-        return dtos;
+       
+
+        return entities;
     }
 
     public async Task<CustomerDTO> Update(UpdateCustomerDTO updateCustomerDTO)
     {
         var entity = await VerifyExists(updateCustomerDTO.Id);
 
-        entity.Id = updateCustomerDTO.Id;
-        entity.FirstName = updateCustomerDTO.FirstName;
-        entity.LastName = updateCustomerDTO.LastName;
-        entity.Email = updateCustomerDTO.Email;
-        entity.Phone = updateCustomerDTO.Phone;
-        entity.BirthDate = updateCustomerDTO.BirthDate;
+        updateCustomerDTO.Adapt(entity);
 
         _context.Customers.Update(entity);
         await _context.SaveChangesAsync();
 
 
-        return AddTo(entity);
+        return entity.Adapt<CustomerDTO>();
     }
 
     private async Task<Customer> VerifyExists(int id)
@@ -107,13 +97,5 @@ public class CustomerRepository : ICustomerRepository
         return entity;
     }
 
-    private CustomerDTO AddTo(Customer customer) => new()
-    {
-        Id = customer.Id,
-        FullName = $"{customer.FirstName} {customer.LastName}",
-        Phone = customer.Phone,
-        Email = customer.Email,
-        BirthDate = customer.BirthDate
-
-    };
+    
 }
