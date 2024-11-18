@@ -4,27 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities
+namespace Core.DTOs.Product
 {
-    public class Product
+    public class ProductDTO
     {
         public int Id { get; set; }
 
-        public int  EntityId { get; set; }
-
         public string Name { get; set; } = string.Empty;
 
-        public string Status { get; set; } = null!; 
+        public string Status { get; set; } = null!;
 
         public string Description { get; set; } = string.Empty;
 
         public DateTime StartDate { get; set; }
 
-        public Entity Entity { get; set; } = null!;
-
-
-        public List<CustomerEntityProduct> CustomerEntityProducts { get; set; } = null!;
-
-            
     }
 }

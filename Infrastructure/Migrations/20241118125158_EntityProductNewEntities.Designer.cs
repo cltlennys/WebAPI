@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241115143505_EntityProductNewEntities")]
+    [Migration("20241118125158_EntityProductNewEntities")]
     partial class EntityProductNewEntities
     {
         /// <inheritdoc />
@@ -155,6 +155,52 @@ namespace Infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("Core.Entities.CustomerEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("EntityId");
+
+                    b.ToTable("CustomerEntities");
+                });
+
+            modelBuilder.Entity("Core.Entities.CustomerEntityProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerEntityId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerEntityId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CustomerProducts");
+                });
+
             modelBuilder.Entity("Core.Entities.Entity", b =>
                 {
                     b.Property<int>("Id")
@@ -274,6 +320,44 @@ namespace Infrastructure.Migrations
                     b.Navigation("Card");
                 });
 
+            modelBuilder.Entity("Core.Entities.CustomerEntity", b =>
+                {
+                    b.HasOne("Core.Entities.Customer", "Customer")
+                        .WithMany("CustomerEntities")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Entity", "Entity")
+                        .WithMany("CustomerEntities")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Entity");
+                });
+
+            modelBuilder.Entity("Core.Entities.CustomerEntityProduct", b =>
+                {
+                    b.HasOne("Core.Entities.CustomerEntity", "CustomerEntity")
+                        .WithMany("CustomerEntityProducts")
+                        .HasForeignKey("CustomerEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Product", "Product")
+                        .WithMany("CustomerEntityProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CustomerEntity");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Core.Entities.Entity", b =>
                 {
                     b.HasOne("Core.Entities.Customer", "Customer")
@@ -320,12 +404,26 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Cards");
 
+                    b.Navigation("CustomerEntities");
+
                     b.Navigation("Entities");
+                });
+
+            modelBuilder.Entity("Core.Entities.CustomerEntity", b =>
+                {
+                    b.Navigation("CustomerEntityProducts");
                 });
 
             modelBuilder.Entity("Core.Entities.Entity", b =>
                 {
+                    b.Navigation("CustomerEntities");
+
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Core.Entities.Product", b =>
+                {
+                    b.Navigation("CustomerEntityProducts");
                 });
 #pragma warning restore 612, 618
         }

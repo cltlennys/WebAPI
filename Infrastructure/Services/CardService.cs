@@ -22,7 +22,6 @@ public class CardService : ICardService
         return await _repository.Add(createCardDTO);
     }
 
-
     public async Task<ChargeDTO> AddByCard(int cardId, CreateChargeDTO createChargeDTO)
     {
         var isTransactionAllowed = await _chargeRepository

@@ -14,4 +14,6 @@ public class Customer
     public List<Card> Cards { get; set; } = [];
 
     public List<Entity> Entities { get; set; } = [];
+
+    public List<CustomerEntity> CustomerEntities { get; set; } = null!;
 }

@@ -16,6 +16,9 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Entity> Entities { get; set; }
+    public DbSet<CustomerEntity> CustomerEntities { get; set; }
+
+    public DbSet<CustomerEntityProduct> CustomerProducts { get; set; }
 
 
     public ApplicationDbContext()
@@ -36,6 +39,8 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
         modelBuilder.ApplyConfiguration(new EntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerEntityProductConfiguration());
 
 
     }

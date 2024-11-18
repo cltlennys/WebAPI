@@ -1,5 +1,6 @@
 ﻿
 
+
 using Core.DTOs.Card;
 using Core.DTOs.Charge;
 using Core.Entities;
@@ -41,15 +42,11 @@ namespace Infrastructure.Repositories
         {
             var card = await _context.Cards.FindAsync(cardId);
             if (card is null)
-                throw new Exception("No se encont");
+                throw new Exception("No se encontro");
             return card.CreditLimit - card.AvailableCredit >= amount;
         }
 
-        public async Task<List<ChargeDTO>> GetAll()
-        {
-            //return await _}
-            throw new Exception();
-        }
+        
             
     }
 }

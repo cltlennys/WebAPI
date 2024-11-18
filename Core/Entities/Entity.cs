@@ -19,5 +19,7 @@ namespace Core.Entities
 
         public Customer Customer { get; set; } = null!;
 
+        public List<CustomerEntity> CustomerEntities { get; set; } = null!;
+
     }
 }

@@ -1,7 +1,4 @@
-﻿
-
-
-using Core.DTOs;
+﻿using Core.DTOs;
 
 namespace Core.Entities
 {
@@ -9,7 +6,6 @@ namespace Core.Entities
     {
         public int Id { get; set; }
         public string Type { get; set;  } = string.Empty;
-
 
         public string Number { get; set; } = string.Empty ;
 
@@ -30,9 +26,5 @@ namespace Core.Entities
         public List<Charge> Charges { get; set; } = null!;
 
         public List<Payment> Payments { get; set; } = null!;
-
-
-
-
     }
 }
